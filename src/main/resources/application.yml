@@ -5,6 +5,10 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   jpa:
     hibernate:
       ddl-auto: create # application실행 시점에 table을 삭제 및 재생성 옵션
