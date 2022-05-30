@@ -26,7 +26,7 @@ public class OrderRepository {
         return em.find(Order.class,id);
     }
 
-    public List<Order> findAll(OrderSearch orderSearch){
+    public List<Order> findAllByString(OrderSearch orderSearch){
         String jpql = "select o from Order o join o.member m ";
 
 
@@ -41,7 +41,8 @@ public class OrderRepository {
                 .getResultList();*/
 
         // 휴먼버그가 충분히 일어날 수 있는 쿼리
-       /* boolean isFirstCondition = true;
+        boolean isFirstCondition = true;
+
         if(orderSearch.getOrderStatus() !=null){
             if(isFirstCondition){
                 jpql += " where";
@@ -49,7 +50,20 @@ public class OrderRepository {
             }else{
                 jpql+= " and";
             }
-        }*/
+            jpql += "o.status = :status";
+        }
+
+        // 회원 이름 검색
+        if(StringUtils.hasText(orderSearch.getMemberName())){
+            if(isFirstCondition){
+                jpql += "where";
+                isFirstCondition = false;
+            } else{
+                jpql += "and";
+            }
+            jpql += "m.name like :name";
+        }
+
 
         return em.createQuery(jpql,Order.class)
                 .setMaxResults(1000) // 최대 1000건 조회
